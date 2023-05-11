@@ -25,13 +25,14 @@ def f_func(x_k, u_k, w_k):
 def h_func(x_k, u_k, v_k):
     def OCV(SOC):
         return 3.5 + 0.7 * SOC
-    return OCV(x_k[0,0]) - R1 * x_k[1,0] - R0 * u_k + v_k
+    return OCV(x_k[0,:]) - R1 * x_k[1,:] - R0 * u_k + v_k
+
 
 # SPKF parameters and create SPKF object.
 x_hat_int = np.array([[0.5], [0]])
 Ny = 1
-SigmaX = np.array([[1e-6, 0],[0, 1e-8]])
-SigmaW, SigmaV = 0.002, 0.002
+SigmaX = np.array([[1e-3, 0],[0, 1e-6]])
+SigmaW, SigmaV = 0.2, 0.2
 
 spkf_obj = SPKF(xhat=x_hat_int, Ny=Ny, SigmaX=SigmaX, SigmaW=SigmaW, SigmaV=SigmaV, f_func=f_func, h_func=h_func)
 
@@ -42,7 +43,7 @@ ztrue_array, zhat_array, SigmaZ_array  = np.zeros(max_iter), np.zeros(max_iter),
 xtrue = np.array([[0.5 + SigmaX[0,0] * np.random.normal()], [0 + SigmaX[1,0] * np.random.normal()]])
 
 for t_ in range(max_iter):
-    u = 1 + SigmaX[0,0] * np.random.normal()  # simulate input signal (electric current signal)
+    u = 1 + SigmaX[0,0] * np.random.normal()
     w = (np.transpose(scipy.linalg.cholesky(SigmaW)) * np.random.normal())[0, 0]
     v = (scipy.linalg.cholesky(SigmaV) * np.random.normal())[0, 0]
     ytrue = h_func(x_k=xtrue, u_k=u, v_k=v)

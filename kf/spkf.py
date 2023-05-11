@@ -119,7 +119,7 @@ class SPKF:
         Constant for CDKF.
         :return:
         """
-        return ((self.h ** 2) - self.L) / self.h
+        return ((self.h ** 2) - self.L) / (self.h ** 2)
 
     @property
     def alpha_m(self):
